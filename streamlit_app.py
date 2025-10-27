@@ -234,8 +234,6 @@ else:
 # -----------------------
 # Footer / Help
 # -----------------------
-st.markdown("---")
-st.markdown("**Ajuda rápida para deploy:**\n\n1. Cria uma conta em https://streamlit.io/cloud .\n2. Cria um repositório GitHub com este ficheiro `streamlit_app.py` e um `requirements.txt` (ve em baixo).\n3. Faz deploy no Streamlit Cloud apontando para o repo.\n4. Se quiseres armazenamento persistente no Google Sheets, segue as instruções em `README` e adiciona os segredos no Streamlit Cloud (gspread_service_account e gspread_sheet_id).")
 
 st.markdown("""**requirements.txt** suggestion:\n
 streamlit
@@ -244,8 +242,6 @@ pandas
 gspread
 oauth2client
 """)
-
-st.markdown("**README resumo (colocado no repo):**\n1) Se não quiseres Google Sheets, a app usa SQLite local e permite exportar CSV.\n2) Para Google Sheets: cria um Service Account nas Cloud APIs, ativa Sheets API, gera chave JSON e copia o JSON para o segredo `gspread_service_account` no Streamlit Cloud; cria uma Google Sheet, copia o ID para `gspread_sheet_id`, e partilha a folha com o email do service-account.")
 
 st.markdown("---")
 st.caption("App criada: **FaturasContinente** — modifica este ficheiro conforme necessidades (extras: identificar supermercado, número de fatura, categorias por palavras-chave, tags, etc.).")
