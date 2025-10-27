@@ -229,16 +229,22 @@ else:
 
 st.subheader("📄 Detalhe das faturas")
 
-# Ordenar do mais recente para o mais antigo
+# Adiciona a coluna de comentário
 df_sorted = df.sort_values('date', ascending=False).reset_index(drop=True)
+df_sorted["Comentário"] = df_sorted["total"].apply(
+    lambda x: "Pago em saldo Cartão Continente" if x == 0 else ""
+)
 
 # Mostrar tabela com botão de eliminar
+st.write("🧾 Lista de faturas registadas:")
+
 for idx, row in df_sorted.iterrows():
-    cols = st.columns([3, 2, 2, 1])
+    cols = st.columns([3, 2, 2, 3, 1])
     cols[0].write(row['date'].strftime("%d/%m/%Y"))
     cols[1].write(f"{row['total']:.2f} €")
     cols[2].write(row['filename'])
-    if cols[3].button("🗑️", key=f"del_{idx}"):
+    cols[3].write(row['Comentário'])
+    if cols[4].button("🗑️", key=f"del_{idx}"):
         cur.execute("DELETE FROM receipts WHERE filename = ?", (row['filename'],))
         conn.commit()
         st.success(f"Fatura '{row['filename']}' eliminada com sucesso.")
