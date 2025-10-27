@@ -234,14 +234,3 @@ else:
 # -----------------------
 # Footer / Help
 # -----------------------
-
-st.markdown("""**requirements.txt** suggestion:\n
-streamlit
-pdfplumber
-pandas
-gspread
-oauth2client
-""")
-
-st.markdown("---")
-st.caption("App criada: **FaturasContinente** — modifica este ficheiro conforme necessidades (extras: identificar supermercado, número de fatura, categorias por palavras-chave, tags, etc.).")
