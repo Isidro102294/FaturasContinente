@@ -7,7 +7,7 @@ from datetime import datetime
 import sqlite3
 
 st.set_page_config(page_title="Faturas Continente", layout="wide")
-st.title("🧾 Resgisto de Gastos Continente")
+st.title("🧾 Registo de Gastos Continente")
 
 # -----------------------
 # Funções auxiliares
