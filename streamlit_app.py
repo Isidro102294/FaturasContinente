@@ -203,21 +203,23 @@ if USE_GSHEETS:
 else:
     df = sqlite_fetch_all()
 
+import streamlit as st
+
+# ... código anterior permanece igual ...
+
 if df.empty:
     st.write("Sem faturas ainda. Faz upload acima para começar.")
 else:
-    # Normalize df
     df = df.copy()
     df['date'] = pd.to_datetime(df['date'])
     df['month'] = df['date'].dt.to_period('M').dt.to_timestamp()
     df['year'] = df['date'].dt.year
     df['total'] = df['total'].astype(float)
 
-    # Monthly summary
     monthly = df.groupby('month')['total'].sum().reset_index()
     yearly = df.groupby('year')['total'].sum().reset_index()
 
-    col1, col2 = st.columns([2,1])
+    col1, col2 = st.columns([2, 1])
     with col1:
         st.subheader("Gasto por mês")
         st.bar_chart(monthly.set_index('month'))
@@ -225,11 +227,22 @@ else:
         st.subheader("Gasto por ano")
         st.table(yearly)
 
-    st.subheader("Detalhe das faturas")
-    st.dataframe(df.sort_values('date', ascending=False).reset_index(drop=True))
+    st.subheader("📄 Detalhe das faturas")
+
+    # Mostra lista com botão de eliminar
+    for i, row in df.iterrows():
+        col1, col2, col3 = st.columns([3, 2, 1])
+        col1.write(f"📅 {row['date'].strftime('%d/%m/%Y')}")
+        col2.write(f"💶 {row['total']:.2f} €  ({row['filename']})")
+        if col3.button("🗑️ Eliminar", key=f"del_{i}"):
+            cur.execute("DELETE FROM receipts WHERE filename = ?", (row['filename'],))
+            conn.commit()
+            st.success(f"Fatura '{row['filename']}' eliminada.")
+            st.experimental_rerun()
 
     csv = df.to_csv(index=False).encode('utf-8')
     st.download_button("📥 Exportar CSV", data=csv, file_name="faturas_continente.csv", mime='text/csv')
+
 
 # -----------------------
 # Footer / Help
