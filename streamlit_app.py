@@ -153,7 +153,7 @@ with tab2:
         st.subheader("📄 Detalhe das faturas")
         df_sorted = df.sort_values('date', ascending=False).reset_index(drop=True)
         df_sorted["Comentário"] = df_sorted["total"].apply(
-            lambda x: "Pago em saldo Cartão Continente" if x == 0 else ""
+            lambda x: "Pago com saldo Cartão Continente" if x == 0 else ""
         )
 
         df_display = df_sorted.copy()
