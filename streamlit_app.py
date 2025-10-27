@@ -10,14 +10,6 @@ st.set_page_config(page_title="FaturasContinente", layout="wide")
 st.title("🧾 FaturasContinente")
 
 # -----------------------
-# Menu lateral
-# -----------------------
-menu = st.sidebar.radio(
-    "📋 Menu",
-    ["Inserir Faturas", "Ver Gastos", "Eliminar Faturas"]
-)
-
-# -----------------------
 # Funções auxiliares
 # -----------------------
 
@@ -94,9 +86,14 @@ def sqlite_fetch_all():
     return df
 
 # -----------------------
+# Menu superior (abas)
+# -----------------------
+tab1, tab2, tab3 = st.tabs(["📤 Inserir Faturas", "📈 Ver Gastos", "🗑️ Eliminar Faturas"])
+
+# -----------------------
 # Página: Inserir Faturas
 # -----------------------
-if menu == "Inserir Faturas":
+with tab1:
     st.header("📤 Inserir novas faturas")
 
     uploaded_files = st.file_uploader("Envia aqui as faturas PDF do Continente", type=["pdf"], accept_multiple_files=True)
@@ -127,7 +124,7 @@ if menu == "Inserir Faturas":
 # -----------------------
 # Página: Ver Gastos
 # -----------------------
-elif menu == "Ver Gastos":
+with tab2:
     st.header("📈 Visualização de gastos")
 
     df = sqlite_fetch_all()
@@ -175,7 +172,7 @@ elif menu == "Ver Gastos":
 # -----------------------
 # Página: Eliminar Faturas
 # -----------------------
-elif menu == "Eliminar Faturas":
+with tab3:
     st.header("🗑️ Eliminar faturas")
 
     df = sqlite_fetch_all()
@@ -191,4 +188,3 @@ elif menu == "Eliminar Faturas":
             conn.commit()
             st.success(f"Fatura '{selected_filename}' eliminada com sucesso.")
             st.experimental_rerun()
-
