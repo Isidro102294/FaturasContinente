@@ -227,21 +227,27 @@ else:
         st.subheader("Gasto por ano")
         st.table(yearly)
 
-    st.subheader("📄 Detalhe das faturas")
+st.subheader("📄 Detalhe das faturas")
 
-    # Mostra lista com botão de eliminar
-    for i, row in df.iterrows():
-        col1, col2, col3 = st.columns([3, 2, 1])
-        col1.write(f"📅 {row['date'].strftime('%d/%m/%Y')}")
-        col2.write(f"💶 {row['total']:.2f} €  ({row['filename']})")
-        if col3.button("🗑️ Eliminar", key=f"del_{i}"):
-            cur.execute("DELETE FROM receipts WHERE filename = ?", (row['filename'],))
-            conn.commit()
-            st.success(f"Fatura '{row['filename']}' eliminada.")
-            st.experimental_rerun()
+# Ordenar do mais recente para o mais antigo
+df_sorted = df.sort_values('date', ascending=False).reset_index(drop=True)
 
-    csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button("📥 Exportar CSV", data=csv, file_name="faturas_continente.csv", mime='text/csv')
+# Mostrar tabela com botão de eliminar
+for idx, row in df_sorted.iterrows():
+    cols = st.columns([3, 2, 2, 1])
+    cols[0].write(row['date'].strftime("%d/%m/%Y"))
+    cols[1].write(f"{row['total']:.2f} €")
+    cols[2].write(row['filename'])
+    if cols[3].button("🗑️", key=f"del_{idx}"):
+        cur.execute("DELETE FROM receipts WHERE filename = ?", (row['filename'],))
+        conn.commit()
+        st.success(f"Fatura '{row['filename']}' eliminada com sucesso.")
+        st.experimental_rerun()
+
+st.markdown("---")
+st.download_button("📥 Exportar CSV", data=df_sorted.to_csv(index=False).encode('utf-8'),
+                   file_name="faturas_continente.csv", mime='text/csv')
+
 
 
 # -----------------------
